@@ -23,34 +23,34 @@ flowchart TB
   subgraph SpringBoot[Spring Boot Application]
     direction TB
 
-    subgraph Security[security/*]
+    subgraph Security[security package]
       JWTFilter[JWTAuthFilter]
       JWTService[JWTService]
       SecurityConfig[WebSecurityConfig]
       AuthService[AuthService]
     end
 
-    subgraph Web[controller/*]
+    subgraph Web[controller package]
       AuthController[AuthController]
       UserController[UserController]
       RecordController[FinancialRecordController]
       DashboardController[DashboardController]
     end
 
-    subgraph Service[service/*]
+    subgraph Service[service package]
       UserService[UserService]
       RecordService[FinancialRecordService]
       DashboardService[DashboardService]
     end
 
-    subgraph Persistence[repository/*]
+    subgraph Persistence[repository package]
       UserRepo[UserRepository]
       RecordRepo[FinancialRecordRepository]
     end
 
-    subgraph CrossCutting[advice/*]
-      ResponseWrap[GlobalResponseHandler\n(ApiResponse envelope)]
-      ExceptionMap[GlobalExceptionHandler\n(ApiError mapping)]
+    subgraph CrossCutting[advice package]
+      ResponseWrap[GlobalResponseHandler (ApiResponse envelope)]
+      ExceptionMap[GlobalExceptionHandler (ApiError mapping)]
     end
   end
 
@@ -60,7 +60,7 @@ flowchart TB
   JWTFilter -->|validates token| JWTService
   JWTFilter -->|sets SecurityContext| Web
 
-  Client -->|/auth/*| AuthController --> AuthService --> UserRepo
+  Client -->|/auth endpoints| AuthController --> AuthService --> UserRepo
   AuthService --> JWTService
 
   UserController --> UserService --> UserRepo
