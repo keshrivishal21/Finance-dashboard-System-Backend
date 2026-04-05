@@ -31,3 +31,75 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# ------------------ Added to avoid committing secrets, local files and large binaries ------------------
+# Environment and secret files
+.env
+.env.*
+*.env
+*.secret
+credentials.json
+secrets.json
+
+# Local application properties (allow checked-in defaults but ignore local overrides)
+application-local.properties
+application-dev.properties
+application-*.local.properties
+
+# Keystores / certificates / keys
+*.jks
+*.keystore
+*.p12
+*.pem
+*.crt
+*.key
+*.der
+
+# Logs
+/logs/
+*.log
+*.log.*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/workspace / history
+*.idea/
+*.sublime-workspace
+*.sublime-project
+*.vscode/
+.history/
+
+# Maven / build artifacts and local caches
+.settings/
+dependency-reduced-pom.xml
+release.properties
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# Docker
+docker-compose.override.yml
+
+# Test output
+reports/
+
+# Coverage
+coverage/
+
+# Ignore local vault files, tokens and session dumps
+*.token
+*.session
+
+# End of additions
