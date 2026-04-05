@@ -13,66 +13,64 @@ This backend is designed for the assignment **“Finance Data Processing and Acc
 
 ## Architecture Diagram
 
-### Mermaid (renders on GitHub and Mermaid-compatible Markdown viewers)
+### Diagram image (always visible)
+If Mermaid rendering is disabled in GitHub for your repo/org, use the image below.
+
+> You can generate this image from the Mermaid source using https://mermaid.live and save it as `docs/architecture.png`.
+
+![Architecture Diagram](docs/architecture.png)
+
+### Mermaid source (renders on GitHub when Mermaid is enabled)
 > If you’re viewing this README in an editor that doesn’t support Mermaid, the diagram may appear as plain text.
 
 ```mermaid
 flowchart TB
   Client[Frontend / API Client]
+  JWTFilter[JWTAuthFilter]
+  JWTService[JWTService]
 
-  subgraph SpringBoot[Spring Boot Application]
-    direction TB
+  AuthController[AuthController]
+  UserController[UserController]
+  RecordController[FinancialRecordController]
+  DashboardController[DashboardController]
 
-    subgraph Security[security package]
-      JWTFilter[JWTAuthFilter]
-      JWTService[JWTService]
-      SecurityConfig[WebSecurityConfig]
-      AuthService[AuthService]
-    end
+  AuthService[AuthService]
+  UserService[UserService]
+  RecordService[FinancialRecordService]
+  DashboardService[DashboardService]
 
-    subgraph Web[controller package]
-      AuthController[AuthController]
-      UserController[UserController]
-      RecordController[FinancialRecordController]
-      DashboardController[DashboardController]
-    end
+  UserRepo[UserRepository]
+  RecordRepo[FinancialRecordRepository]
 
-    subgraph Service[service package]
-      UserService[UserService]
-      RecordService[FinancialRecordService]
-      DashboardService[DashboardService]
-    end
-
-    subgraph Persistence[repository package]
-      UserRepo[UserRepository]
-      RecordRepo[FinancialRecordRepository]
-    end
-
-    subgraph CrossCutting[advice package]
-      ResponseWrap[GlobalResponseHandler (ApiResponse envelope)]
-      ExceptionMap[GlobalExceptionHandler (ApiError mapping)]
-    end
-  end
+  ResponseWrap[GlobalResponseHandler]
+  ExceptionMap[GlobalExceptionHandler]
 
   DB[(PostgreSQL)]
 
-  Client -->|HTTP Request| JWTFilter
-  JWTFilter -->|validates token| JWTService
-  JWTFilter -->|sets SecurityContext| Web
+  Client -->|HTTP| JWTFilter
+  JWTFilter -->|validates| JWTService
 
-  Client -->|/auth endpoints| AuthController --> AuthService --> UserRepo
+  Client --> AuthController
+  Client --> UserController
+  Client --> RecordController
+  Client --> DashboardController
+
+  AuthController --> AuthService --> UserRepo --> DB
   AuthService --> JWTService
 
   UserController --> UserService --> UserRepo
-  RecordController --> RecordService --> RecordRepo
+  RecordController --> RecordService --> RecordRepo --> DB
   DashboardController --> DashboardService --> RecordRepo
 
-  UserRepo --> DB
-  RecordRepo --> DB
+  AuthController --> ResponseWrap
+  UserController --> ResponseWrap
+  RecordController --> ResponseWrap
+  DashboardController --> ResponseWrap
 
-  Web --> ResponseWrap
-  Web --> ExceptionMap
-  ExceptionMap --> ResponseWrap
+  AuthController --> ExceptionMap --> ResponseWrap
+  UserController --> ExceptionMap --> ResponseWrap
+  RecordController --> ExceptionMap --> ResponseWrap
+  DashboardController --> ExceptionMap --> ResponseWrap
 ```
 
 ### Plain-text fallback (always visible)
